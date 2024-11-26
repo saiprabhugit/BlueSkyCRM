@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Dashboard</title>
+  <link rel="stylesheet" href="../src/styles.css">
+</head>
+
+<body>
+  <div id="webcrumbs">
+    <div class="w-[1200px] bg-white shadow rounded-lg min-h-[800px] p-6 flex flex-col gap-6">
+      <header class="flex justify-between items-center">
+        <h1 style="background-color: blueviolet;">CRM Dashboard</h1>
+        <button id="newCustomerBtn" class="bg-primary-500 text-primary-50 py-2 px-4 rounded-md">New Customer</button>
+      </header>
+
+      <!-- Add the New Customer Form container -->
+      <div id="newCustomerFormContainer" style="display: none; margin-top: 20px;">
+        <form id="newCustomerForm" class="flex flex-col gap-4">
+          <label>
+            Name:
+            <input type="text" id="customerName" placeholder="Enter name" required>
+          </label>
+          <label>
+            Email:
+            <input type="email" id="customerEmail" placeholder="Enter email" required>
+          </label>
+          <label>
+            Phone Number:
+            <input type="tel" id="customerPhone" placeholder="Enter phone number" required>
+          </label>
+          <button type="button" id="saveCustomerBtn" class="bg-primary-500 text-primary-50 py-2 px-4 rounded-md">Save</button>
+        </form>
+      </div>
+
+      <section class="grid grid-cols-3 gap-6">
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2 class="font-medium text-neutral-950 mb-4">Leads Overview</h2>
+          <Chart type="donut" options='{ "chart": { "toolbar": { "show": false } }, "dataLabels": { "enabled": false }, "colors": ["#3b82f6", "#9ca3af", "#e5e7eb"] }' series="[40, 30, 30]" height="200" width="100%"></Chart>
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2 class="font-medium text-neutral-950 mb-4">Sales Funnel</h2>
+          <Chart type="bar" options='{ "chart": { "toolbar": { "show": false } }, "dataLabels": { "enabled": false }, "colors": ["#3b82f6", "#9ca3af"] }' series='[{ "data": [20, 35, 40, 60] }]' height="200" width="100%"></Chart>
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2 class="font-medium text-neutral-950 mb-4">Performance</h2>
+          <Chart type="line" options='{ "chart": { "toolbar": { "show": false } }, "dataLabels": { "enabled": false }, "colors": ["#3b82f6"] }' series='[{ "data": [5, 15, 25, 45, 55] }]' height="200" width="100%"></Chart>
+        </div>
+      </section>
+
+      <section class="bg-neutral-100 p-4 rounded-md flex flex-col gap-4">
+        <h2 class="font-medium text-neutral-950">Recent Activities</h2>
+        <ul class="flex flex-col gap-3">
+          <li class="flex justify-between items-center">
+            <span class="text-neutral-950">Followed up with John Doe</span>
+            <time class="text-neutral-500 text-sm">2 hours ago</time>
+          </li>
+          <li class="flex justify-between items-center">
+            <span class="text-neutral-950">Closed deal with Acme Corp</span>
+            <time class="text-neutral-500 text-sm">1 day ago</time>
+          </li>
+          <li class="flex justify-between items-center">
+            <span class="text-neutral-950">Sent proposal to Jane Smith</span>
+            <time class="text-neutral-500 text-sm">3 days ago</time>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const newCustomerBtn = document.getElementById("newCustomerBtn");
+      const newCustomerFormContainer = document.getElementById("newCustomerFormContainer");
+      const saveCustomerBtn = document.getElementById("saveCustomerBtn");
+
+      // Show the form when "New Customer" button is clicked
+      newCustomerBtn.addEventListener("click", () => {
+        newCustomerFormContainer.style.display = "block";
+      });
+
+      // Handle form submission
+      saveCustomerBtn.addEventListener("click", () => {
+        const name = document.getElementById("customerName").value;
+        const email = document.getElementById("customerEmail").value;
+        const phone = document.getElementById("customerPhone").value;
+
+        if (name && email && phone) {
+          console.log(`Name: ${name}, Email: ${email}, Phone: ${phone}`);
+          alert("Customer saved successfully!");
+
+          // Clear the form and hide it
+          document.getElementById("newCustomerForm").reset();
+          newCustomerFormContainer.style.display = "none";
+        } else {
+          alert("Please fill out all fields.");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
