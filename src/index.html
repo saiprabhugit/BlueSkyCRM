@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<link rel="stylesheet" href="../src/styles.css">
+
+<body>
+
+  <div id="webcrumbs">
+    <div className='w-[1200px] bg-white shadow rounded-lg min-h-[800px] p-6 flex flex-col gap-6'>
+      <header className='flex justify-between items-center'>
+        <h1  style="background-color: blueviolet;">CRM Dashboard</h1>
+        <button className='bg-primary-500 text-primary-50 py-2 px-4 rounded-md'>New Customer</button>
+      </header>
+      <section className='grid grid-cols-3 gap-6'>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Leads Overview</h2>
+          <Chart type='donut' options={
+{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500], neutral[500], neutral[200]] }} series={[40, 30, 30]} height={200} width='100%' />
+        </div>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Sales Funnel</h2>
+          <Chart type='bar' options={{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500], neutral[500]] }} series={[{ data: [20, 35, 40, 60] }]} height={200} width='100%' />
+        </div>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Performance</h2>
+          <Chart type='line' options={{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500]] }} series={[{ data: [5, 15, 25, 45, 55] }]} height={200} width='100%' />
+        </div>
+      </section>
+      <section className='bg-neutral-100 p-4 rounded-md flex flex-col gap-4'>
+        <h2 className='font-medium text-neutral-950'>Recent Activities</h2>
+        <ul className='flex flex-col gap-3'>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Followed up with John Doe</span>
+            <time className='text-neutral-500 text-sm'>2 hours ago</time>
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Closed deal with Acme Corp</span>
+            <time className='text-neutral-500 text-sm'>1 day ago</time>
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Sent proposal to Jane Smith</span>
+            <time className='text-neutral-500 text-sm'>3 days ago</time>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+
+</html>
