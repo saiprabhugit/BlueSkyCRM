@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<link rel="stylesheet" href="../src/styles.css">
+
+<body>
+
+  <div id="webcrumbs">
+    <div className='w-[1200px] bg-white shadow rounded-lg min-h-[800px] p-6 flex flex-col gap-6'>
+      <header className='flex justify-between items-center'>
+        <h1  style="background-color: blueviolet;">BlueSky CRM Dashboard</h1>
+        <button className='bg-primary-500 text-primary-50 py-2 px-4 rounded-md'>LOGIN</button>
+      </header>
+      <section className='grid grid-cols-3 gap-6'>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Leads Overview</h2>
+        
+          <Chart type='donut' options={
+{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500], neutral[500], neutral[200]] }} series={[40, 30, 30]} height={200} width='100%' />
+        </div>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Sales Funnel</h2>
+          <Chart type='bar' options={{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500], neutral[500]] }} series={[{ data: [20, 35, 40, 60] }]} height={200} width='100%' />
+        </div>
+        <div className='bg-neutral-100 p-4 rounded-md'>
+          <h2 className='font-medium text-neutral-950 mb-4'>Performance</h2>
+          <Chart type='line' options={{ chart: { toolbar: { show: false } }, dataLabels: { enabled: false }, colors:
+            [primary[500]] }} series={[{ data: [5, 15, 25, 45, 55] }]} height={200} width='100%' />
+        </div>
+      </section>
+      <section className='bg-neutral-100 p-4 rounded-md flex flex-col gap-4'>
+        <h2 className='font-medium text-neutral-950'>Recent Activities</h2>
+        <ul className='flex flex-col gap-3'>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Followed up with Sai Prabhu</span>
+            <time className='text-neutral-500 text-sm'>2 hours ago</time>
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Closed deal with Google Hyderabad</span>
+            <time className='text-neutral-500 text-sm'>1 day ago</time>
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Sent proposal to Abirami</span>
+            <time className='text-neutral-500 text-sm'>Yesterday</time>
+
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>NDA signed with Roman</span>
+            <time className='text-neutral-500 text-sm'>3 days ago</time>
+          </li>
+          <li className='flex justify-between items-center'>
+            <span className='text-neutral-950'>Meeting completed with Karan</span>
+            <time className='text-neutral-500 text-sm'>2 days ago</time>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueSky CRM Dashboard</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <style>
+    /* Modal styles */
+    #customerModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      width: 300px;
+    }
+
+    #customerModal input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #modalOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="webcrumbs">
+    <div class='w-[1200px] bg-white shadow rounded-lg min-h-[800px] p-6 flex flex-col gap-6'>
+      <header class='flex justify-between items-center'>
+        <h1 style="background-color: blueviolet;">AI Insights about your Customers</h1>
+        <button id="newCustomerBtn" class='bg-primary-500 text-primary-50 py-2 px-4 rounded-md'>New Customer</button>
+      </header>
+      <section class='grid grid-cols-3 gap-6'>
+        <!-- Dashboard sections here -->
+      </section>
+      <section class='bg-neutral-100 p-4 rounded-md flex flex-col gap-4'>
+        <h2 class='font-medium text-neutral-950'>Recent Activities</h2>
+        <ul id="recentActivities" class='flex flex-col gap-3'>
+          <li class='flex justify-between items-center'>
+            <span class='text-neutral-950'>Followed up with Sai Prabhu</span>
+            <time class='text-neutral-500 text-sm'>2 hours ago</time>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalOverlay"></div>
+  <div id="customerModal">
+    <h3>Add New Customer</h3>
+    <input type="text" id="customerName" placeholder="Name" />
+    <input type="email" id="customerEmail" placeholder="Email" />
+    <input type="tel" id="customerNumber" placeholder="Phone Number" />
+    <button id="saveCustomerBtn" class='bg-primary-500 text-primary-50 py-2 px-4 rounded-md'>Save</button>
+  </div>
+
+  <script>
+    const newCustomerBtn = document.getElementById("newCustomerBtn");
+    const customerModal = document.getElementById("customerModal");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const saveCustomerBtn = document.getElementById("saveCustomerBtn");
+    const recentActivities = document.getElementById("recentActivities");
+
+    // Show the modal
+    newCustomerBtn.addEventListener("click", () => {
+      customerModal.style.display = "block";
+      modalOverlay.style.display = "block";
+    });
+
+    // Hide the modal
+    modalOverlay.addEventListener("click", () => {
+      customerModal.style.display = "none";
+      modalOverlay.style.display = "none";
+    });
+
+    // Save customer details
+    saveCustomerBtn.addEventListener("click", () => {
+      const name = document.getElementById("customerName").value;
+      const email = document.getElementById("customerEmail").value;
+      const number = document.getElementById("customerNumber").value;
+
+      if (name && email && number) {
+        // Add to recent activities
+        const newActivity = document.createElement("li");
+        newActivity.className = 'flex justify-between items-center';
+        newActivity.innerHTML = `
+          <span class='text-neutral-950'>Added customer: ${name} (${email}, ${number})</span>
+          <time class='text-neutral-500 text-sm'>Just now</time>
+        `;
+        recentActivities.appendChild(newActivity);
+
+        // Reset form and hide modal
+        document.getElementById("customerName").value = "";
+        document.getElementById("customerEmail").value = "";
+        document.getElementById("customerNumber").value = "";
+        customerModal.style.display = "none";
+        modalOverlay.style.display = "none";
+      } else {
+        alert("Please fill in all fields.");
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueSky CRM Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    button {
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #6a11cb;
+    }
+
+    section {
+      background: white;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li span {
+      color: #333;
+    }
+
+    ul li time {
+      font-size: 12px;
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>BlueSky CRM Dashboard</h1>
+      <button id="addCustomerBtn">Add New Customer</button>
+    </header>
+
+    <!-- Customer Insights -->
+    <section>
+      <h2>Customer Insights</h2>
+      <ul id="customerInsights">
+        <li>
+          <span>John Doe - Total Purchases: $2,300</span>
+          <time>Last Interaction: 3 days ago</time>
+        </li>
+        <li>
+          <span>Jane Smith - Total Purchases: $1,500</span>
+          <time>Last Interaction: 1 week ago</time>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Reminders -->
+    <section>
+      <h2>Reminders</h2>
+      <ul id="reminderList">
+        <li>
+          <span>Follow-up with Google Hyderabad</span>
+          <time>Due: Tomorrow</time>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Recent Activities -->
+    <section>
+      <h2>Recent Activities</h2>
+      <ul id="recentActivities">
+        <li>
+          <span>Called Jane Smith regarding proposal</span>
+          <time>2 hours ago</time>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Script -->
+  <script>
+    // Adding new customer logic
+    const addCustomerBtn = document.getElementById("addCustomerBtn");
+    const customerInsights = document.getElementById("customerInsights");
+
+    addCustomerBtn.addEventListener("click", () => {
+      const name = prompt("Enter customer name:");
+      const purchases = prompt("Enter total purchases:");
+      const interaction = prompt("Enter last interaction date (e.g., 2 days ago):");
+
+      if (name && purchases && interaction) {
+        const newCustomer = document.createElement("li");
+        newCustomer.innerHTML = `<span>${name} - Total Purchases: $${purchases}</span><time>Last Interaction: ${interaction}</time>`;
+        customerInsights.appendChild(newCustomer);
+        alert("Customer added successfully!");
+      } else {
+        alert("Please fill in all fields!");
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueSky CRM Dashboard</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    button {
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #6a11cb;
+    }
+
+    /* Tab styles */
+    .tabs {
+      display: flex;
+      justify-content: space-evenly;
+      background-color: #fff;
+      padding: 10px 0;
+      border-bottom: 2px solid #ccc;
+    }
+
+    .tabs button {
+      padding: 10px 20px;
+      border: none;
+      background-color: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .tabs button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .tabs .active {
+      border-bottom: 2px solid #2575fc;
+      font-weight: bold;
+      color: #2575fc;
+    }
+
+    .tab-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .tab-content section {
+      background: white;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      flex: 1;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li span {
+      color: #333;
+    }
+
+    ul li time {
+      font-size: 12px;
+      color: gray;
+    }
+
+    /* Modal styles */
+    #customerModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      width: 300px;
+    }
+
+    #customerModal input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #modalOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>BlueSky CRM Dashboard</h1>
+      <button id="newCustomerBtn">New Customer</button>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="active" id="loginTab">Login</button>
+      <button id="aiInsightsTab">AI Insights</button>
+      <button id="todayTasksTab">Today's Tasks</button>
+      <button id="remindersTab">Reminders</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Login Tab -->
+      <section id="loginTabContent" class="tab-section">
+        <h2>Login</h2>
+        <ul>
+          <li>
+            <span>User: John Doe</span>
+            <time>Last login: 1 hour ago</time>
+          </li>
+          <!-- Add more login-related content as needed -->
+        </ul>
+      </section>
+
+      <!-- AI Insights Tab -->
+      <section id="aiInsightsTabContent" class="tab-section" style="display: none;">
+        <h2>AI Insights</h2>
+        <p>AI-generated insights for customer data will be displayed here.</p>
+      </section>
+
+      <!-- Today's Tasks Tab -->
+      <section id="todayTasksTabContent" class="tab-section" style="display: none;">
+        <h2>Today's Tasks</h2>
+        <ul>
+          <li>
+            <span>Follow up with Google Hyderabad</span>
+            <time>Due: Today</time>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Reminders Tab -->
+      <section id="remindersTabContent" class="tab-section" style="display: none;">
+        <h2>Reminders</h2>
+        <ul>
+          <li>
+            <span>Follow-up with Sai Prabhu</span>
+            <time>Due: Tomorrow</time>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalOverlay"></div>
+  <div id="customerModal">
+    <h3>Add New Customer</h3>
+    <input type="text" id="customerName" placeholder="Name" />
+    <input type="email" id="customerEmail" placeholder="Email" />
+    <input type="tel" id="customerNumber" placeholder="Phone Number" />
+    <button id="saveCustomerBtn">Save</button>
+  </div>
+
+  <script>
+    const newCustomerBtn = document.getElementById("newCustomerBtn");
+    const customerModal = document.getElementById("customerModal");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const saveCustomerBtn = document.getElementById("saveCustomerBtn");
+
+    const loginTab = document.getElementById("loginTab");
+    const aiInsightsTab = document.getElementById("aiInsightsTab");
+    const todayTasksTab = document.getElementById("todayTasksTab");
+    const remindersTab = document.getElementById("remindersTab");
+
+    const loginTabContent = document.getElementById("loginTabContent");
+    const aiInsightsTabContent = document.getElementById("aiInsightsTabContent");
+    const todayTasksTabContent = document.getElementById("todayTasksTabContent");
+    const remindersTabContent = document.getElementById("remindersTabContent");
+
+    // Show and hide tab contents
+    const showTabContent = (tab, content) => {
+      document.querySelectorAll('.tab-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      content.style.display = 'block';
+
+      document.querySelectorAll('.tabs button').forEach(button => {
+        button.classList.remove('active');
+      });
+      tab.classList.add('active');
+    };
+
+    // Tab click events
+    loginTab.addEventListener("click", () => showTabContent(loginTab, loginTabContent));
+    aiInsightsTab.addEventListener("click", () => showTabContent(aiInsightsTab, aiInsightsTabContent));
+    todayTasksTab.addEventListener("click", () => showTabContent(todayTasksTab, todayTasksTabContent));
+    remindersTab.addEventListener("click", () => showTabContent(remindersTab, remindersTabContent));
+
+    // Default to Login tab
+    showTabContent(loginTab, loginTabContent);
+  </script>
+
+</body>
+
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueSky CRM Dashboard</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    button {
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #6a11cb;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .tab:hover {
+      background-color: #2575fc;
+      color: white;
+    }
+
+    section {
+      background: white;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li span {
+      color: #333;
+    }
+
+    ul li time {
+      font-size: 12px;
+      color: gray;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .grid div {
+      background: #f4f4f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid h2 {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>BlueSky CRM Dashboard</h1>
+      <button id="addCustomerBtn">Add New Customer</button>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab" id="loginTab">Login</div>
+      <div class="tab" id="aiInsightsTab">AI Insights</div>
+      <div class="tab" id="todayTasksTab">Today Tasks</div>
+      <div class="tab" id="remindersTab">Reminders</div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <section>
+      <h2>Leads Overview</h2>
+      <div class="grid">
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Leads Overview</h2>
+          <Chart type="donut" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc', '#f4f4f9', '#c0c0c0']
+          }} series={[40, 30, 30]} height={200} width="100%" />
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Sales Funnel</h2>
+          <Chart type="bar" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc', '#f4f4f9']
+          }} series={[{ data: [20, 35, 40, 60] }]} height={200} width="100%" />
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Performance</h2>
+          <Chart type="line" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc']
+          }} series={[{ data: [5, 15, 25, 45, 55] }]} height={200} width="100%" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Activities -->
+    <section>
+      <h2>Recent Activities</h2>
+      <ul id="recentActivities">
+        <li>
+          <span>Called Jane Smith regarding proposal</span>
+          <time>2 hours ago</time>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Script -->
+  <script>
+    // Adding new customer logic
+    const addCustomerBtn = document.getElementById("addCustomerBtn");
+    const recentActivities = document.getElementById("recentActivities");
+
+    addCustomerBtn.addEventListener("click", () => {
+      const name = prompt("Enter customer name:");
+      const purchases = prompt("Enter total purchases:");
+      const interaction = prompt("Enter last interaction date (e.g., 2 days ago):");
+
+      if (name && purchases && interaction) {
+        const newCustomer = document.createElement("li");
+        newCustomer.innerHTML = `<span>${name} - Total Purchases: $${purchases}</span><time>Last Interaction: ${interaction}</time>`;
+        recentActivities.appendChild(newCustomer);
+        alert("Customer added successfully!");
+      } else {
+        alert("Please fill in all fields!");
+      }
+    });
+
+    // Placeholder for tab functionality
+    const loginTab = document.getElementById("loginTab");
+    const aiInsightsTab = document.getElementById("aiInsightsTab");
+    const todayTasksTab = document.getElementById("todayTasksTab");
+    const remindersTab = document.getElementById("remindersTab");
+
+    loginTab.addEventListener("click", () => alert("Login Tab clicked"));
+    aiInsightsTab.addEventListener("click", () => alert("AI Insights Tab clicked"));
+    todayTasksTab.addEventListener("click", () => alert("Today Tasks Tab clicked"));
+    remindersTab.addEventListener("click", () => alert("Reminders Tab clicked"));
+  </script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueSky CRM Dashboard</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    button {
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #6a11cb;
+    }
+
+    /* Tabs Section */
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .tab:hover {
+      background-color: #2575fc;
+      color: white;
+    }
+
+    section {
+      background: white;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .grid div {
+      background: #f4f4f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid h2 {
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li span {
+      color: #333;
+    }
+
+    ul li time {
+      font-size: 12px;
+      color: gray;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>BlueSky CRM Dashboard</h1>
+      <button id="addCustomerBtn">Add New Customer</button>
+    </header>
+
+    <!-- Tabs Section -->
+    <div class="tabs">
+      <div class="tab" id="loginTab">Login</div>
+      <div class="tab" id="aiInsightsTab">AI Insights</div>
+      <div class="tab" id="todayTasksTab">Today Tasks</div>
+      <div class="tab" id="remindersTab">Reminders</div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <section>
+      <h2>Leads Overview</h2>
+      <div class="grid">
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Leads Overview</h2>
+          <Chart type="donut" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc', '#f4f4f9', '#c0c0c0']
+          }} series={[40, 30, 30]} height={200} width="100%" />
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Sales Funnel</h2>
+          <Chart type="bar" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc', '#f4f4f9']
+          }} series={[{ data: [20, 35, 40, 60] }]} height={200} width="100%" />
+        </div>
+        <div class="bg-neutral-100 p-4 rounded-md">
+          <h2>Performance</h2>
+          <Chart type="line" options={{
+            chart: { toolbar: { show: false } }, 
+            dataLabels: { enabled: false }, 
+            colors: ['#2575fc']
+          }} series={[{ data: [5, 15, 25, 45, 55] }]} height={200} width="100%" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Activities -->
+    <section>
+      <h2>Recent Activities</h2>
+      <ul id="recentActivities">
+        <li>
+          <span>Called Jane Smith regarding proposal</span>
+          <time>2 hours ago</time>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Script -->
+  <script>
+    // Adding new customer logic
+    const addCustomerBtn = document.getElementById("addCustomerBtn");
+    const recentActivities = document.getElementById("recentActivities");
+
+    addCustomerBtn.addEventListener("click", () => {
+      const name = prompt("Enter customer name:");
+      const purchases = prompt("Enter total purchases:");
+      const interaction = prompt("Enter last interaction date (e.g., 2 days ago):");
+
+      if (name && purchases && interaction) {
+        const newCustomer = document.createElement("li");
+        newCustomer.innerHTML = `<span>${name} - Total Purchases: $${purchases}</span><time>Last Interaction: ${interaction}</time>`;
+        recentActivities.appendChild(newCustomer);
+        alert("Customer added successfully!");
+      } else {
+        alert("Please fill in all fields!");
+      }
+    });
+
+    // Placeholder for tab functionality
+    const loginTab = document.getElementById("loginTab");
+    const aiInsightsTab = document.getElementById("aiInsightsTab");
+    const todayTasksTab = document.getElementById("todayTasksTab");
+    const remindersTab = document.getElementById("remindersTab");
+
+    loginTab.addEventListener("click", () => alert("Login Tab clicked"));
+    aiInsightsTab.addEventListener("click", () => alert("AI Insights Tab clicked"));
+    todayTasksTab.addEventListener("click", () => alert("Today Tasks Tab clicked"));
+    remindersTab.addEventListener("click", () => alert("Reminders Tab clicked"));
+  </script>
+</body>
+
+</html>

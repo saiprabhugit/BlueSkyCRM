@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Demo</title>
+</head>
+<body>
+    <h1  >Firebase Demo App</h1>
+    <div>
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+        <button id="addButton">Add Name</button>
+    </div>
+    <div>
+        <h3>Names List:</h3>
+        <ul id="namesList"></ul>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-firestore.js"></script>
+    <!-- Your JavaScript File -->
+    <script src="script.js" type="module"></script>
+    <link rel="stylesheet" href="../src/styles.css">
+</body>
+</html>
